@@ -3,11 +3,19 @@ from django.db import models
 from django.utils import timezone
 
 
+class PublishedManager(models.Manager):
+
+    def get_queryset(self):
+        return super().get_queryset().filter(status='published')
+
+
 class Post(models.Model):
     STATUS_CHOICES_TPL = (
         ('draft', 'Draft'),
         ('published', 'Published'),
     )
+    objects = models.Manager()
+    published = PublishedManager()
 
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250,
