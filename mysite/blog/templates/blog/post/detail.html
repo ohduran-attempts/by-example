@@ -9,4 +9,32 @@
   <p>
     <a href="{% url "blog:post_share" post.id %}">Share</a>
   </p>
+
+  {% with comments.count as total_comments %}
+    <h2>{{ total_comments }} comment{{ total_comments | pluralize }}</h2>
+  {% endwith %}
+
+  {% for comment in comments %}
+    <div class="comment">
+      <p class='info'>
+        Comment by {{ comment.name }}
+      </p>
+      {{ comment.body | linebreaks }}
+    </div>
+  {% empty %}
+  <p>There are no comments yet</p>
+  {% endfor %}
+
+  {% if new_comment %}
+    Your comment has been added.
+    {% else %}
+      <h2>Add a new comment</h2>
+      <form class="" action="." method="post">
+        {{ comment_form.as_p }}
+        {% csrf_token %}
+      <p>
+        <input type="submit" name="" value="Add">
+      </p>
+      </form>
+  {% endif %}
 {% endblock %}
