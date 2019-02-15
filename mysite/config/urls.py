@@ -1,9 +1,15 @@
+from blog import sitemaps as smap
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
+
+sitemaps = {
+    'posts': smap.PostSitemap
+}
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -20,8 +26,11 @@ urlpatterns = [
         include("mysite.users.urls", namespace="users"),
     ),
     path("accounts/", include("allauth.urls")),
+    # sitemap
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     # Your stuff: custom urls includes go here
     path('blog/', include('blog.urls', namespace='blog')),
+
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )
